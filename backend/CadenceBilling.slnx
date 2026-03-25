@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="../../../../../../../../Proyectos/cadence-billing-saas/backend/src/Api/Api.csproj" />
+    <Project Path="../../../../../../../../Proyectos/cadence-billing-saas/backend/src/Application/Application.csproj" />
+    <Project Path="../../../../../../../../Proyectos/cadence-billing-saas/backend/src/Domain/Domain.csproj" />
+    <Project Path="../../../../../../../../Proyectos/cadence-billing-saas/backend/src/Infrastructure/Infrastructure.csproj" />
+  </Folder>
+</Solution>
