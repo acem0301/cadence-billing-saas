@@ -1,6 +1,8 @@
 using Application.Abstractions;
 using Application.Customers.Commands;
 using Application.Customers.Queries;
+using Application.Invoices.Commands;
+using Application.Invoices.Queries;
 using Domain.Repositories;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
@@ -12,7 +14,13 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
@@ -45,10 +53,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Repositories
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 
 // Use cases
 builder.Services.AddScoped<GetCustomersQuery>();
 builder.Services.AddScoped<CreateCustomerCommand>();
+builder.Services.AddScoped<GetInvoicesQuery>();
+builder.Services.AddScoped<CreateInvoiceCommand>();
+builder.Services.AddScoped<TransitionInvoiceCommand>();
 
 var app = builder.Build();
 

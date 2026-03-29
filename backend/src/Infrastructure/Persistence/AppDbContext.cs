@@ -5,19 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
 
-public sealed class AppDbContext : DbContext
+public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ITenantContext tenantContext) : DbContext(options)
 {
-    private readonly ITenantContext _tenantContext;
-
-    public AppDbContext(DbContextOptions<AppDbContext> options, ITenantContext tenantContext)
-        : base(options)
-    {
-        _tenantContext = tenantContext;
-    }
+    private readonly ITenantContext _tenantContext = tenantContext;
 
     public DbSet<Tenant> Tenants => Set<Tenant>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<Invoice> Invoices => Set<Invoice>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -67,6 +62,33 @@ public sealed class AppDbContext : DbContext
 
             b.HasIndex(x => x.Name);
             b.HasIndex(x => x.TenantId);
+
+            b.HasOne(x => x.Tenant)
+             .WithMany()
+             .HasForeignKey(x => x.TenantId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasQueryFilter(x => x.TenantId == _tenantContext.TenantId);
+        });
+
+        modelBuilder.Entity<Invoice>(b =>
+        {
+            b.ToTable("Invoices");
+            b.HasKey(x => x.Id);
+            b.Property(x => x.Description).HasMaxLength(500).IsRequired();
+            b.Property(x => x.Amount).HasColumnType("decimal(18,2)").IsRequired();
+            b.Property(x => x.Status).HasConversion<string>().IsRequired();
+            b.Property(x => x.CreatedAt).IsRequired();
+            b.Property(x => x.TenantId).IsRequired();
+
+            b.HasIndex(x => x.TenantId);
+            b.HasIndex(x => x.CustomerId);
+            b.HasIndex(x => x.Status);
+
+            b.HasOne(x => x.Customer)
+             .WithMany()
+             .HasForeignKey(x => x.CustomerId)
+             .OnDelete(DeleteBehavior.Restrict);
 
             b.HasOne(x => x.Tenant)
              .WithMany()
