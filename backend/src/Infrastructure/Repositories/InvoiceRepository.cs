@@ -59,7 +59,6 @@ public sealed class InvoiceRepository(AppDbContext db, ITenantContext tenantCont
         if (invoice is null)
             throw new InvoiceDomainException("Invoice not found.");
 
-        // This is where the domain protects itself
         invoice.Transition(newStatus);
 
         await _db.SaveChangesAsync(ct);

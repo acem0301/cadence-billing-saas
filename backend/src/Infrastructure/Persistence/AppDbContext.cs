@@ -13,6 +13,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ITenant
     public DbSet<User> Users => Set<User>();
     public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Invoice> Invoices => Set<Invoice>();
+    public DbSet<BillingCadence> BillingCadences => Set<BillingCadence>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -84,6 +85,35 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, ITenant
             b.HasIndex(x => x.TenantId);
             b.HasIndex(x => x.CustomerId);
             b.HasIndex(x => x.Status);
+
+            b.HasOne(x => x.Customer)
+             .WithMany()
+             .HasForeignKey(x => x.CustomerId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasOne(x => x.Tenant)
+             .WithMany()
+             .HasForeignKey(x => x.TenantId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            b.HasQueryFilter(x => x.TenantId == _tenantContext.TenantId);
+        });
+
+        modelBuilder.Entity<BillingCadence>(b =>
+        {
+            b.ToTable("BillingCadences");
+            b.HasKey(x => x.Id);
+            b.Property(x => x.Description).HasMaxLength(500).IsRequired();
+            b.Property(x => x.Amount).HasColumnType("decimal(18,2)").IsRequired();
+            b.Property(x => x.Frequency).HasConversion<string>().IsRequired();
+            b.Property(x => x.NextBillingDate).IsRequired();
+            b.Property(x => x.IsActive).IsRequired();
+            b.Property(x => x.CreatedAt).IsRequired();
+            b.Property(x => x.TenantId).IsRequired();
+
+            b.HasIndex(x => x.TenantId);
+            b.HasIndex(x => x.CustomerId);
+            b.HasIndex(x => new { x.IsActive, x.NextBillingDate });
 
             b.HasOne(x => x.Customer)
              .WithMany()

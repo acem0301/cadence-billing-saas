@@ -62,6 +62,9 @@ builder.Services.AddScoped<GetInvoicesQuery>();
 builder.Services.AddScoped<CreateInvoiceCommand>();
 builder.Services.AddScoped<TransitionInvoiceCommand>();
 
+// Background jobs
+builder.Services.AddHostedService<Infrastructure.Jobs.InvoiceGenerationJob>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
