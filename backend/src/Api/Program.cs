@@ -65,6 +65,7 @@ builder.Services.AddScoped<TransitionInvoiceCommand>();
 // Background jobs
 builder.Services.AddHostedService<Infrastructure.Jobs.InvoiceGenerationJob>();
 
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -73,9 +74,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<Api.Middleware.ExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

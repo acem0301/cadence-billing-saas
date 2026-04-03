@@ -8,4 +8,8 @@
     <Project Path="../../../../../../../../Proyectos/cadence-billing-saas/backend/src/Domain/Domain.csproj" />
     <Project Path="../../../../../../../../Proyectos/cadence-billing-saas/backend/src/Infrastructure/Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CadenceBilling.IntegrationTests/CadenceBilling.IntegrationTests.csproj" />
+    <Project Path="tests/CadenceBilling.UnitTests/CadenceBilling.UnitTests.csproj" />
+  </Folder>
 </Solution>
