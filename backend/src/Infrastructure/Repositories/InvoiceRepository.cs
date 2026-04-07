@@ -31,7 +31,7 @@ public sealed class InvoiceRepository(AppDbContext db, ITenantContext tenantCont
             .AnyAsync(x => x.Id == customerId, ct);
 
         if (!customerExists)
-            throw new InvoiceDomainException("Customer not found.");
+            throw new NotFoundException("Customer not found.");
 
         var entity = new Invoice
         {
@@ -57,7 +57,7 @@ public sealed class InvoiceRepository(AppDbContext db, ITenantContext tenantCont
             .FirstOrDefaultAsync(x => x.Id == id, ct);
 
         if (invoice is null)
-            throw new InvoiceDomainException("Invoice not found.");
+            throw new NotFoundException("Invoice not found.");
 
         invoice.Transition(newStatus);
 

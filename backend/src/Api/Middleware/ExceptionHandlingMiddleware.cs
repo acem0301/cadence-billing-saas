@@ -18,6 +18,13 @@ public sealed class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Ex
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(JsonSerializer.Serialize(new { message = ex.Message }));
         }
+        catch (NotFoundException ex)
+        {
+            logger.LogWarning("Resource not found: {Message}", ex.Message);
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(JsonSerializer.Serialize(new { message = ex.Message }));
+        }
         catch (Exception ex)
         {
             logger.LogError(ex, "Unhandled exception");
