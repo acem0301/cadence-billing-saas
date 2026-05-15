@@ -25,14 +25,17 @@ A multi-tenant SaaS billing API built with .NET 10 and Clean Architecture. Desig
 
 ## Architecture
 
+```
 src/
-├── Domain/         # Entities, enums, exceptions, repository interfaces
-├── Application/    # Use cases (queries and commands), DTOs, abstractions
-├── Infrastructure/ # EF Core, repositories, JWT service, background job
-└── Api/            # Controllers, middleware, Program.cs
+├── Domain/          # Entities, enums, exceptions, repository interfaces
+├── Application/     # Use cases (queries and commands), DTOs, abstractions
+├── Infrastructure/  # EF Core, repositories, JWT service, background job
+└── Api/             # Controllers, middleware, Program.cs
+
 tests/
 ├── CadenceBilling.UnitTests/        # Domain logic tests
 └── CadenceBilling.IntegrationTests/ # API endpoint tests
+```
 
 
 ## Design Decisions
